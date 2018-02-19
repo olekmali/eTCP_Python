@@ -1,7 +1,7 @@
 import sys
 
 """
-This program demonstrates how to read data line byline until an empty line is received
+This program demonstrates how to read data line by line until an empty line is received
 """
 
 while 1:
