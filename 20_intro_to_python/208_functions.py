@@ -5,7 +5,7 @@ def fib(n):
     while b < n:
         print(b, end=', ')
         a, b = b, a+b
-    print( )
+    print()
 
 fib(5000)
 # print( a )    # Note: a and b are local variables!
@@ -25,6 +25,7 @@ def fib2(n):
 
 r = fib2(100000)
 print( r[:10], "...", r[-1] )
+print( str(r[:10])[:-1], "...", r[-1], "]" )
 
 
 
@@ -37,6 +38,7 @@ fn_arguments_n_defaults(1, y=2)
 fn_arguments_n_defaults(1, z=3)
 fn_arguments_n_defaults(1, z=2, y=3)
 fn_arguments_n_defaults(z=2, y=3)
+
 
 
 def empty_function():

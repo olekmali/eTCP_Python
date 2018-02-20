@@ -1,3 +1,4 @@
+# Simple introduction of 1D lists
 days_of_the_week = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
 print( days_of_the_week )

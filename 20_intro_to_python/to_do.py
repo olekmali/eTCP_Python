@@ -6,9 +6,6 @@ for day in days_of_the_week:
     print( day.title() )
     
 
-even_numbers = list(range(2,11,2)) 
-print(even_numbers)
-
 
 squares = []
 for value in range(1,11):
@@ -16,24 +13,6 @@ for value in range(1,11):
     squares.append(square)
     
 print(squares)
-
-
-
-
-
-13 lines (10 sloc)  179 Bytes
-age = 12
-
-if age < 4:
-    price = 0
-elif age < 18:
-    price = 5
-elif age < 65:
-    price = 10
-elif age >= 65:
-    price = 5
-
-print("Your admission cost is $" + str(price) + ".")
 
 
 
