@@ -5,8 +5,8 @@ This program demonstrates how to read data line by line until an empty line is r
 """
 
 while 1:
-    data = sys.stdin.readline().strip()
-    if len(data)==0:
+    text = sys.stdin.readline().strip()
+    if len(text)==0:
         break
     else:
-        print len(data)
+        print len(text)
