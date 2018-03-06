@@ -1,0 +1,38 @@
+sudo cmd.exe
+    pip install esptool
+    pip install mpfshell
+        rename mpfshell to mpfshell.py
+
+Download the latest binary (esp8266-20171101-v1.9.3.bin) from:
+    http://micropython.org/download
+
+cmd.exe
+    esptool.py --port COM4 --baud 115200 erase_flash
+    esptool.py --port COM4 --baud 115200 write_flash --verify --flash_size=detect 0 esp8266-20171101-v1.9.3.bin
+or
+    esptool.py --port COM4 --baud 115200 write_flash --verify --flash_size=detect -fm dio 0 esp8266-20171101-v1.9.3.bin
+
+PuTTY connect serial COM4 115200 no control flow
+
+Tutorial: http://docs.micropython.org/en/latest/esp8266/
+
+
+
+Setup persistent WiFi:
+import network
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect('malilab', 'dram-portable-lab-key')
+wlan.ifconfig()
+
+Check WiFi status:
+import network
+wlan = network.WLAN(network.STA_IF)
+wlan.ifconfig()
+
+Setup WebREPL:
+import webrepl_setup
+
+import webrepl
+webrepl.start()
+

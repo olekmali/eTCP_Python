@@ -1,0 +1,16 @@
+
+Note:
+Our board has one LED and one button!
+LED is on Pin #2
+
+
+Tutorial:
+http://micropython-on-esp8266-workshop.readthedocs.io/en/latest/
+
+
+How to run remotely:
+https://forum.micropython.org/viewtopic.php?t=2538
+
+
+
+

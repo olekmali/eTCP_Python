@@ -18,10 +18,10 @@ def deal_with_client(request, client_address):
     # finished with client
 
 
-ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+ssl_context = ssl.create_default_context(purpose=Purpose.SERVER_AUTH)
 ssl_context.load_cert_chain(certfile="331_cert.pem", keyfile="331_cert.pem")
 """ The self-signed certificate was created by running:
-    openssl req -new -x509 -days 365 -nodes -out cert.pem -keyout cert.pem
+    openssl req -new -x509 -days 3650 -nodes -out cert.pem -keyout cert.pem
 """
 
 server_scoket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,11 +30,14 @@ server_scoket.listen(1)
 
 while True:
     client, fromaddr = server_scoket.accept()
-    ssl_client = ssl_context.wrap_socket(client, server_side=True)
     try:
-        deal_with_client(ssl_client, fromaddr)
+        ssl_client = ssl_context.wrap_socket(client, server_side=True)
+        try:
+            deal_with_client(ssl_client, fromaddr)
+        except:
+            print( "Client connection error" )
+        finally:
+            ssl_client.shutdown(socket.SHUT_RDWR)
+            ssl_client.close()
     except:
-        print( "Client connection error" )
-    finally:
-        ssl_client.shutdown(socket.SHUT_RDWR)
-        ssl_client.close()
+        print( "Client TLS connection error" )
