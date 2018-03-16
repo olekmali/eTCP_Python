@@ -11,6 +11,7 @@ for i in range(ATTEMPTS):
     try:
         client.setblocking(2.0)
         client.connect( (HOST, PORT) )
+        # number inside socket.recv(nnn) sets the maximum number of bytes to receive
         data = client.recv(4)
         if len(data)!=4:
             raise

@@ -13,12 +13,13 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Connect to server and send data
 try:
     client.connect( (HOST, PORT) )
-    data = client.recv(1024)
-    text = str( data, 'UTF-8' ).strip()
+    so_file = client.makefile('r', encoding='UTF-8')
+    text = ( so_file.readline() ).strip()
+    print( text )
+    text = ( so_file.readline() ).strip()
     print( text )
     client.sendall( bytes( "Automated Client\r\n", 'UTF-8' ))
-    data = client.recv(1024)
-    text = str( data, 'UTF-8' ).strip()
+    text = ( so_file.readline() ).strip()
     print( text )
 except:
     print( "Socket connection error!" )

@@ -19,10 +19,11 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         count = count + 1;
         # self.request is the TCP socket self.request connected to the client
         try:
+            # Let's connect a file reader that will allow us to read data line by line
+            so_file = self.request.makefile('r', encoding='UTF-8')
             self.request.sendall( bytes( "Welcome to the server.\r\nWhat is your name please?\r\n", 'UTF-8' ) )
             # string.strip removes all leading and trailing white space including \r\n
-            # number inside socket.recv(nnn) sets the maximum number of bytes to receive
-            name = str( self.request.recv(1024), 'UTF-8' ).strip()
+            name = ( so_file.readline() ).strip()
             print( name , " has just contacted us from " , self.client_address )
             # prepare the reply
             data = "Nice to meet you " + name + ".\r\nYou are the " + str(count) + "th person who stopped by today. Bye now!\r\n"
