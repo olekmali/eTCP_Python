@@ -43,7 +43,7 @@ def toggle():
     import machine
     led = machine.Pin(2)
     led.init(machine.Pin.OUT)
-    but = machine.Pin(14)
+    but = machine.Pin(0)
     but.init(machine.Pin.IN, machine.Pin.PULL_UP)
     state = but.value()
     while True:
