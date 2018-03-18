@@ -1,15 +1,4 @@
-"""
-    copy-paste function(s) into your board
-    or
-    copy this example as a file file_name.py and then run
-        import file_name
-        file_name.shimmer()
-        Ctrl+C
-        file_name.blink()
-        Ctrl+C
-        file_name.toggle()
-        Ctrl+C
-"""
+""" Testing digital IO pin access in MicroPython """
 
 def shimmer():
     import time
@@ -43,13 +32,34 @@ def toggle():
     import machine
     led = machine.Pin(2)
     led.init(machine.Pin.OUT)
+    ledstate = 0
+    led.value(ledstate)
     but = machine.Pin(0)
     but.init(machine.Pin.IN, machine.Pin.PULL_UP)
-    state = but.value()
+    butstate = but.value()
     while True:
-        if but.value()!=state:
-            state = but.value()
+        if but.value()!=butstate:
+            butstate = but.value()
             time.sleep_ms(10) # for debouncing
-            if state==0:
-                led.value(not led.value())
+            if butstate==0:
+                ledstate = not ledstate
+                led.value(ledstate)
+                # Warning! Pin.value() behavior is undefined on output pins!
+                # It just happens that it does work on ESP8266 (platform dependent)
+                # led.value(not led.value())
     pwm.deinit()
+
+
+"""
+copy-paste function(s) into your board
+or
+copy this example as a file test_io.py and then run
+    import test_io
+    test_io.shimmer()
+    Ctrl+C
+    test_io.blink()
+    Ctrl+C
+    test_io.toggle()
+    Ctrl+C
+Note: there is no way to re-import the code after the file is changed, the board must be reset
+"""

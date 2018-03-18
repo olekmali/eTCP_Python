@@ -42,3 +42,8 @@ def httpd_pins():
         cl.send( bytes( response, 'UTF-8' ))
         cl.close()
         print('served')
+
+""" To test run:
+import web_server
+web_server.httpd_pins()
+"""
