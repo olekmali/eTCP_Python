@@ -21,13 +21,10 @@ def blink():
         time.sleep_ms(250)
         led.value(0)
         time.sleep_ms(250)
-    pwm.deinit()
+    led.deinit()
 
 
 def toggle():
-    """
-        requires a wire connected to pin 14 (D5) to be periodically connected to GND or a real button
-    """
     import time
     import machine
     led = machine.Pin(2)
@@ -47,7 +44,7 @@ def toggle():
                 # Warning! Pin.value() behavior is undefined on output pins!
                 # It just happens that it does work on ESP8266 (platform dependent)
                 # led.value(not led.value())
-    pwm.deinit()
+    led.deinit()
 
 
 """
