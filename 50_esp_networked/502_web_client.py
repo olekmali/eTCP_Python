@@ -20,7 +20,7 @@ def http_get(url):
         elif proto=='https:':
             import ussl
             # See http://docs.micropython.org/en/v1.9.3/esp8266/library/ussl.html
-            addr = socket.getaddrinfo(host, 80)[0][-1]
+            addr = socket.getaddrinfo(host, 443)[0][-1]
             s = socket.socket()
             try:
                 ss = ussl.wrap_socket(s)
