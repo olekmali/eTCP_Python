@@ -22,6 +22,11 @@ def httpd_pins():
         file    = request.split(' ')[1]
         # print('request line', request)
         print('request file', file)
+        # read the reminder of the request to make a Web browser happy
+        while True:
+            line = cl_file.readline()
+            if not line or line == b'\r\n':
+                break
 
         if file == '/' or file == '/index.html':
             html_file1 = """<!DOCTYPE html>
@@ -32,10 +37,6 @@ def httpd_pins():
     </body>
 </html>
 """
-            while True:
-                line = cl_file.readline()
-                if not line or line == b'\r\n':
-                    break
             rows = ['<tr><td>%s</td><td>%d</td></tr>' % (str(p), p.value()) for p in pins]
             response = html_file1 % '\n'.join(rows)
             cl.send( bytes( ( header % ('200 OK','text/html; charset=UTF-8') ), 'UTF-8' ))
@@ -54,7 +55,12 @@ def httpd_pins():
         cl.close()
         print('served')
 
+# this will run main() if this code is pasted directly into Python console
+if __name__ == "__main__":
+    httpd_pins()
+
 """ To test run:
+copy this file to the board and then type
 import web_server
 web_server.httpd_pins()
 """
