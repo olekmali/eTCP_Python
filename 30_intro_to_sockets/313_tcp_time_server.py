@@ -23,7 +23,7 @@ except OSError as msg:
     sys.exit(1)
 
 # serve forever
-while 1:
+while True:
     try:
         client_socket, client_address = server.accept()
         handle_client(client_socket, client_address)

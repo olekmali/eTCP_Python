@@ -4,7 +4,7 @@ import sys
 This program demonstrates conversion from text to array of bytes and back to text
 """
 
-while 1:
+while True:
     instr = str( sys.stdin.readline() )
     if len(instr.strip())==0:
         break

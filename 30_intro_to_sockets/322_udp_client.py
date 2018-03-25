@@ -11,8 +11,8 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # Instead, data is directly sent to the recipient via sendto().
 client.sendto( bytes( text + "\n", 'UTF-8' ), (HOST, PORT) )
 # servers are machines, they should reply in a blink of an eye much less than 2 seconds
-client.setblocking(True)
-client.setblocking(2.0)
+# client.settimeout(None) # None means block/wait forever
+client.settimeout(2.0)
 back, addr = client.recvfrom(2048)
 back = str( back, 'UTF-8' )
 

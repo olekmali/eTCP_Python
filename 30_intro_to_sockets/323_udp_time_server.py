@@ -13,7 +13,7 @@ except OSError as msg:
     sys.exit(1)
 
 # serve forever
-while 1:
+while True:
     try:
         data, client_address = server.recvfrom(2048)
         # print("Time requested from ", client_address)

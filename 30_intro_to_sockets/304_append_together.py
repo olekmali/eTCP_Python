@@ -8,7 +8,7 @@ and then how to split it using the first occurrence of an empty line
 buffer = b"";
 
 print( "Enter several lines of text followed by EOF character - Ctrl+Z")
-while 1:
+while True:
     data = bytes( sys.stdin.readline(), 'UTF-8' ) # data chunk, e.g. from a TCP socket
     if not data:
         break

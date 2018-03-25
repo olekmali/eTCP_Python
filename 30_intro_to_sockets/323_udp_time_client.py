@@ -9,7 +9,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 for i in range(ATTEMPTS):
     try:
-        client.setblocking(2.0)
+        client.settimeout(2.0)
         client.sendto( bytes(), (HOST, PORT) )
         back, addr = client.recvfrom(4)
         nettime = int.from_bytes(back, byteorder='big', signed=False)

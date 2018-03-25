@@ -9,7 +9,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 for i in range(ATTEMPTS):
     try:
-        client.setblocking(2.0)
+        client.settimeout(2.0)
         client.connect( (HOST, PORT) )
         # number inside socket.recv(nnn) sets the maximum number of bytes to receive
         data = client.recv(4)
