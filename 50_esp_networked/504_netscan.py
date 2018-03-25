@@ -1,17 +1,8 @@
-
+""" scan,  list and connect one-by one to every ESP board in the proximity """
 wireless = object()
-button   = object()
-butstate = object()
 
 def init():
     global wireless
-    global button
-    global butstate
-    # set up button
-    from machine import Pin
-    button = Pin(0)
-    button.init(Pin.IN, Pin.PULL_UP)
-    butstate = button.value()
     # set up wireless scan and connection
     import upbu_netlib
     upbu_netlib.init()
@@ -39,21 +30,22 @@ def netscan():
     print('Scan complete')
 
 
-def eventloop():
-    global button
-    global butstate
-    if button.value()!=butstate:
-        butstate = button.value()
-        if butstate==0:
-            netscan()
-    # --> if needed insert a command to check for any already received data without any loop/wait time
-    # --> if needed insert a command to act on any received data without any loop/wait time
-
-def main():
+def test():
     init()
+    # set up button
+    from machine import Pin
+    button = Pin(0)
+    button.init(Pin.IN, Pin.PULL_UP)
+    butstate = button.value()
     while True:
-        eventloop()
+        if button.value()!=butstate:
+            butstate = button.value()
+            if butstate==0:
+                netscan()
+        # --> if needed insert a command to check for any already received data without any loop/wait time
+        # --> if needed insert a command to act on any received data without any loop/wait time
+    # end of the forever test loop
 
 # this will run main() if this code is pasted directly into Python console
 if __name__ == "__main__":
-    main()
+    test()
