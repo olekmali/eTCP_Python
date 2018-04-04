@@ -1,13 +1,14 @@
-""" machine to machine messaging via infrastructure """
+""" machine to all machines around messaging via infrastructure """
+
 udps = object()
 
-def init(local_addr):
+def init(listen_addr):
     # The server socket needs to be set up and ready waiting for any incoming messages 
     # even when we are not checking at the very moment. One thread - we don't wait and listen!
     global udps
     import socket
     udps = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udps.bind(local_addr)
+    udps.bind(listen_addr)
     udps.settimeout(0) # do not block this socket on read
 
 def deinit():
@@ -20,20 +21,21 @@ def msg_check():
         message, fr_addr = udps.recvfrom(10)
     except: # catch timeout exception
         message = ''
-    return(message)
+        fr_addr = ('',0)
+    return(message, fr_addr)
 
-def msg_send(remote_addr, message):
+def msg_send(destination_addr, message):
     import socket
     udpc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # we let Python figure out which network interface to use - no bind
-    udpc.sendto(message, remote_addr)
+    udpc.sendto(message, destination_addr)
     udpc.close()
 
-def test(local_ip, remote_ip):
+def test(listen_ip, dest_ip):
     import socket
     # we can open the server on all network interfaces or only one defined by a non-zero IP
-    local_addr  = socket.getaddrinfo(local_ip,  473)[0][-1]
-    init(local_addr)
+    listen_addr = socket.getaddrinfo(listen_ip, 473)[0][-1]
+    init(listen_addr)
     # set up button
     from machine import Pin
     button = Pin(0)
@@ -44,9 +46,9 @@ def test(local_ip, remote_ip):
             butstate = button.value()
             if butstate==0:
                 # technically we can pick a different destination IP address each time
-                remote_addr = socket.getaddrinfo(remote_ip, 473)[0][-1]
-                msg_send(remote_addr, 'pressed')
-        msg = msg_check()
+                dest_addr = socket.getaddrinfo(dest_ip, 473)[0][-1]
+                msg_send(dest_addr, 'pressed')
+        msg, frm = msg_check()
         if len(msg)>0:
             print('received: ', msg)
     # end of the forever test loop
@@ -54,12 +56,15 @@ def test(local_ip, remote_ip):
 if __name__ == "__main__":
     import network
     # local_ip = network.WLAN(network.STA_IF).ifconfig()[0]
-    local_ip = '0.0.0.0'
-    to_ip    = '192.168.4.2'
-    test(local_ip, to_ip)
+    # Pick one of the 224.*.*.* multi-cast addresses except the one used by routers
+    mcast_ip = '224.0.0.1'  # and bind to it for receiving
+                            # and send to it (from your local IP as the source) when sending
+    test(mcast_ip, mcast_ip)
+
 """ all ESPs connected to infrastructure
 import network
 network.WLAN(network.AP_IF).active(False)
 network.WLAN(network.STA_IF).active(True)
+network.WLAN(network.STA_IF).connect('malilab', 'dram-portable-lab-key')
 network.WLAN(network.STA_IF).ifconfig()[0]
 """

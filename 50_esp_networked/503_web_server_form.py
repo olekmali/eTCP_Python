@@ -85,7 +85,11 @@ def httpd_led():
         cl.close()
         print('served')
 
-""" To test run:
+# this will run main() if this code is copy-pasted directly into Python console
+if __name__ == "__main__":
+    httpd_led()
+
+""" To test run after transferring the file to the board:
 import web_server_form
 web_server_form.httpd_led()
 """
