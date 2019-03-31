@@ -4,7 +4,9 @@ def httpd_pins():
     header = "HTTP/1.1 %s\r\nServer: uPython on ESP8266\r\nConnection: close\r\nExpires: 0\r\nContent-Type: %s\r\n\r\n"
 
     import machine
-    pins = [machine.Pin(i, machine.Pin.IN) for i in (0, 2, 4, 5, 12, 13, 14, 15)]
+    pins = [machine.Pin(i) for i in (0, 2, 4, 5, 12, 13, 14, 15)]
+    for p in pins:
+        p.init(machine.Pin.IN, machine.Pin.PULL_UP)
 
     import socket
     addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
