@@ -24,7 +24,7 @@ def msg_check():
         fr_addr = ('',0)
     return(message, fr_addr)
 
-def msg_send(from_addr, destination_addr, message):
+def msg_send(destination_addr, message):
     # extra code for using both AP and STA
     import network
     st =network.WLAN(network.STA_IF);
@@ -37,19 +37,21 @@ def msg_send(from_addr, destination_addr, message):
     import socket
     udpc = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # we use bind on the client side to select a particular network interface
-    udpc.bind(from_addr)
     udpc.sendto(message, destination_addr)
     udpc.close()
     # extra code for using both AP and STA
     ap.active(save_status)
     # extra code ends
 
-def test(listen_ip, from_nic, dest_ip):
+def test():
+    import network
     import socket
+    import utime
+    import upbu_netlib
+    upbu_netlib.init()
     # we can open the server on all network interfaces or only one defined by a non-zero IP
+    listen_ip   = network.WLAN(network.AP_IF).ifconfig()[0]
     listen_addr = socket.getaddrinfo(listen_ip, 473)[0][-1]
-    # we can decide to send the messages from a particular network interface
-    from_addr   = socket.getaddrinfo(from_nic,    0)[0][-1]
     init(listen_addr)
     # set up button
     from machine import Pin
@@ -61,8 +63,21 @@ def test(listen_ip, from_nic, dest_ip):
             butstate = button.value()
             if butstate==0:
                 # technically we can pick a different destination IP address each time
-                dest_addr = socket.getaddrinfo(dest_ip, 473)[0][-1]
-                msg_send(from_addr, dest_addr, 'pressed')
+                print('Scanning for uP Access Points:')
+                for ssid in upbu_netlib.scan():
+                    print('  Attempting connection to ', ssid)
+                    wireless = upbu_netlib.get_STA()
+                    wireless.connect(ssid,'micropythoN')
+                    cnt = 0
+                    while cnt<5000 and not wireless.isconnected():
+                        utime.sleep_ms(1)
+                        cnt = cnt+1
+                    if wireless.isconnected():
+                        print('  Sending to ', ssid)
+                        dest_ip   = network.WLAN(network.STA_IF).ifconfig()[2]
+                        dest_addr = socket.getaddrinfo(dest_ip, 473)[0][-1]
+                        msg_send(dest_addr, 'pressed')
+                print('Scan complete')
         msg, frm = msg_check()
         if len(msg)>0:
             print('received: ', msg)
@@ -73,12 +88,11 @@ if __name__ == "__main__":
     # ESP station  to ESP access point
     network.WLAN(network.AP_IF).active(True)
     network.WLAN(network.STA_IF).active(True)
-    local_ip = network.WLAN(network.AP_IF).ifconfig()[0]
-    from_ip  = network.WLAN(network.STA_IF).ifconfig()[0]
-    to_ip    = network.WLAN(network.STA_IF).ifconfig()[2]
-    print("My IP on the remote WiFi is %s and the destination IP is %s" % (from_ip, to_ip) )
-    print("My IP on my own WiFi is %s" % local_ip)
-    if to_ip == local_ip:
-        print("I will be temporarily switching off my own access point when transmitting because of the IP conflict")
+    local_ip   = network.WLAN(network.AP_IF).ifconfig()[0]
+    my_ip      = network.WLAN(network.STA_IF).ifconfig()[0]
+    gateway_ip = network.WLAN(network.STA_IF).ifconfig()[2]
+    print("My IP on the remote WiFi is %s and the gateway IP is %s" % (my_ip, gateway_ip) )
+    print("My IP on my own WiFi AP is %s" % local_ip)
+    print("I will be temporarily switching off my own access point when transmitting because of the potential IP conflict")
         # Note: in this software version we are switching it off anyway regardless of the conflict or not
-    test(local_ip, from_ip, to_ip)
+    test()
