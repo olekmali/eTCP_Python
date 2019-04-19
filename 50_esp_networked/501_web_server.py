@@ -59,6 +59,11 @@ def httpd_pins():
 
 # this will run main() if this code is pasted directly into Python console
 if __name__ == "__main__":
+    import network
+    wlan_st = network.WLAN(network.STA_IF)
+    wlan_st.active(True)
+    print( ("Connect to http://%s/" % wlan_st.ifconfig()[0]) )
+
     httpd_pins()
 
 """ To test run:
