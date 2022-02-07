@@ -25,5 +25,5 @@ def mqtt_client(server):
 # this will run main() if this code is pasted directly into Python console
 if __name__ == "__main__":
     # mqtt_client('192.168.88.55')
-    mqtt_client('iot.eclipse.org')
-    # mqtt_client('test.mosquitto.org')
+    # mqtt_client('iot.eclipse.org')
+    mqtt_client('test.mosquitto.org')
